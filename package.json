@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"pnpm run dev:app\" \"pnpm run dev:types\"",
+    "dev:app": "vite",
+    "dev:types": "xstate typegen \"src/**/*.ts?(x)\" --watch",
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -14,7 +16,10 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@tauri-apps/api": "^1.0.2"
+    "@tauri-apps/api": "^1.0.2",
+    "@xstate/cli": "^0.3.2",
+    "@xstate/svelte": "^2.0.0",
+    "xstate": "^4.33.4"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "next",
@@ -26,9 +31,11 @@
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
     "autoprefixer": "^10.4.8",
+    "concurrently": "7.3.0",
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-svelte3": "^4.0.0",
+    "npm-run-all": "4.1.5",
     "postcss": "^8.4.16",
     "prettier": "^2.6.2",
     "prettier-plugin-svelte": "^2.7.0",
