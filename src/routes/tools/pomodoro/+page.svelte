@@ -3,16 +3,16 @@
 	import { browser } from '$app/environment';
 	import { onMount, onDestroy } from 'svelte';
 	import { useMachine } from '@xstate/svelte';
-	import { createPomodoroMachine, pomodoroTabMachine } from '$lib/machines/pomodoro';
+	import { timerMachine } from '$lib/machines/timer';
 
 	const initialTimeInSeconds = 25 * 60;
 
-	// const machine = createPomodoroMachine(initialTimeInSeconds);
-	const { state, send } = useMachine(pomodoroTabMachine);
-
-	$: {
-		console.log($state.children);
-	}
+	const { state, send } = useMachine(
+		timerMachine.withContext({
+			time: initialTimeInSeconds,
+			overlap: initialTimeInSeconds
+		})
+	);
 
 	onMount(() => {
 		if (browser) {
@@ -28,13 +28,7 @@
 </script>
 
 <div class="flex flex-col max-w-md mx-auto justify-center items-center">
-	<nav>
-		<button on:click={() => send({ type: 'POMODORO' })}>Pomodoro</button>
-		<button on:click={() => send({ type: 'BREAK' })}>Break</button>
-	</nav>
-	<div />
-	<button on:click={() => send({ type: 'TEST' })}>TEST</button>
-	<!-- <span class="text-8xl mb-4">{secondsToMinutesFormatted($state.context.overlap)}</span>
+	<span class="text-8xl mb-4">{secondsToMinutesFormatted($state.context.overlap)}</span>
 	<button
 		class="bg-white rounded-sm w-28 text-violet-600 px-4 py-2 text-2xl"
 		on:click={() => send({ type: 'TOGGLE' })}
@@ -46,7 +40,7 @@
 		{:else if $state.matches('paused')}
 			Resume
 		{/if}
-	</button> -->
+	</button>
 </div>
 
 <svelte:body class="bg-red-500" />
